@@ -1,0 +1,25 @@
+{
+  "name": "PWA XML Generator - Rahaza Digital",
+  "short_name": "PWA Generator",
+  "description": "Generator template XML Blogger berisi iframe + manifest PWA untuk web app Google Apps Script (GAS).",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

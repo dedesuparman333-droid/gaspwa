@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML PWA Template Generator - Rahaza Digital</title>
+
+    <!-- PWA: Manifest & Meta -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="Generator template XML Blogger berisi iframe + manifest PWA untuk web app Google Apps Script (GAS).">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PWA Generator">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#1a1a2e',
+                        darker: '#16213e',
+                        primary: '#e63946',
+                        accent: '#0f3460'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a2e; }
+        ::-webkit-scrollbar-thumb { background: #0f3460; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #e63946; }
+        
+        .glass-panel {
+            background: rgba(22, 33, 62, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-dark text-gray-200 min-h-screen font-sans antialiased selection:bg-primary selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="bg-darker border-b border-gray-800 py-3 px-4 sm:px-6 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <i class="ph ph-file-code text-2xl sm:text-3xl text-primary"></i>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold text-white tracking-wide">PWA XML <span class="text-primary">Generator</span></h1>
+                    <p class="text-xs text-gray-400">Rahaza Digital Premium Tools</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+        
+        <!-- Left Column: Form -->
+        <div class="lg:col-span-5 space-y-6">
+            <div class="glass-panel p-4 sm:p-6 rounded-2xl shadow-xl">
+                <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <i class="ph ph-sliders-horizontal"></i> Konfigurasi Aplikasi
+                </h2>
+                
+                <form id="configForm" class="space-y-4">
+                    <!-- URL GAS -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">URL Google Apps Script (exec)</label>
+                        <input type="url" id="appUrl" class="w-full bg-dark border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="https://script.google.com/macros/s/.../exec" value="https://script.google.com/macros/s/AKfycbwRMgTWzMfUhkwJSNlV84ecoLJ8w1j79qOIt5GhvWRkrQA7fEfsy5uXanVYqmaGI569CA/exec" required>
+                    </div>
+
+                    <!-- Nama Aplikasi -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Nama Aplikasi</label>
+                            <input type="text" id="appName" class="w-full bg-dark border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary transition-colors" placeholder="Toko Online" value="Toko Online" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Nama Pendek</label>
+                            <input type="text" id="shortName" class="w-full bg-dark border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary transition-colors" placeholder="Toko" value="Toko" required>
+                        </div>
+                    </div>
+
+                    <!-- Deskripsi -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Deskripsi Singkat</label>
+                        <input type="text" id="appDesc" class="w-full bg-dark border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary transition-colors" placeholder="Katalog produk dan keranjang belanja" value="Toko online - katalog produk dan keranjang belanja">
+                    </div>
+
+                    <!-- Tampilan: Warna & Ikon -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Theme Color</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="themeColor" class="h-10 w-10 rounded cursor-pointer bg-transparent border-0" value="#E63946">
+                                <span class="text-sm font-mono text-gray-400" id="themeColorHex">#E63946</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Bg Color</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="bgColor" class="h-10 w-10 rounded cursor-pointer bg-transparent border-0" value="#1A1A2E">
+                                <span class="text-sm font-mono text-gray-400" id="bgColorHex">#1A1A2E</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tipe Ikon -->
+                    <div class="p-4 bg-darker border border-gray-800 rounded-xl space-y-3">
+                        <label class="block text-sm font-medium text-gray-400">Sumber Ikon PWA</label>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-start gap-2 cursor-pointer">
+                                <input type="radio" name="iconType" value="url" class="mt-1 text-primary focus:ring-primary w-4 h-4 flex-shrink-0" checked>
+                                <span class="text-sm text-gray-300 min-w-0">URL Gambar <span class="text-xs text-green-400 bg-green-900/30 px-2 py-0.5 rounded inline-block">(File XML Paling Ringan - Bebas Lag)</span></span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="iconType" value="text" class="text-primary focus:ring-primary w-4 h-4">
+                                <span class="text-sm text-gray-300">Inisial Teks (SVG)</span>
+                            </label>
+                            <label class="flex items-start gap-2 cursor-pointer">
+                                <input type="radio" name="iconType" value="image" class="mt-1 text-primary focus:ring-primary w-4 h-4 flex-shrink-0">
+                                <span class="text-sm text-gray-300 min-w-0">Upload Logo Lokal <span class="text-xs text-yellow-400 inline-block">(Auto-compress WebP)</span></span>
+                            </label>
+                        </div>
+
+                        <!-- Input URL Eksternal (Baru) -->
+                        <div id="urlIconWrapper" class="pt-2 border-t border-gray-800 mt-2">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Link URL Gambar (PNG/JPG/WEBP)</label>
+                            <input type="url" id="iconUrl" class="w-full bg-dark border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors" placeholder="https://blogger.googleusercontent.com/img/.../logo.png" value="">
+                            <p class="text-xs text-gray-500 mt-2 leading-relaxed">* <strong class="text-gray-400">Rekomendasi:</strong> Upload logo Anda ke postingan Blogger, salin link gambarnya, dan paste di sini. Ini mencegah file XML menjadi lag/terlalu besar.</p>
+                        </div>
+
+                        <!-- Input Teks -->
+                        <div id="textIconWrapper" class="pt-2 border-t border-gray-800 mt-2 hidden">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Inisial Teks</label>
+                            <input type="text" id="iconText" maxlength="2" class="w-full bg-dark border border-gray-700 rounded-lg px-4 py-2 text-white font-bold text-center focus:outline-none focus:border-primary transition-colors" placeholder="TK" value="T">
+                        </div>
+
+                        <!-- Input Gambar Base64 -->
+                        <div id="imageIconWrapper" class="pt-2 border-t border-gray-800 mt-2 hidden">
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Upload Logo</label>
+                            <input type="file" id="iconImage" accept="image/png, image/jpeg, image/webp" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-opacity-80 transition-colors bg-dark border border-gray-700 rounded-lg cursor-pointer">
+                            <p class="text-xs text-gray-500 mt-2">* Gambar akan di-resize & dikompresi ke <strong>WebP (agar XML tidak berat)</strong> untuk ukuran 192x192 & 512x512.</p>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="mt-6 p-4 bg-dark rounded-xl border border-gray-800 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-400">
+                            <p>Preview Ikon:</p>
+                        </div>
+                        <div class="w-16 h-16 rounded-xl shadow-lg overflow-hidden flex items-center justify-center bg-transparent" id="iconPreviewContainer" style="background-color: #1A1A2E;">
+                            <span id="iconPreviewText" class="font-bold text-3xl font-sans hidden" style="color: #E63946;">T</span>
+                            <img id="iconPreviewImg" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzFhMWEyZSIvPjx0ZXh0IHg9IjI1NiIgeT0iMzIwIiBmb250LXNpemU9IjI0MCIgZmlsbD0iI2U2Mzk0NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIj5UPC90ZXh0Pjwvc3ZnPg==" alt="Preview" class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                    
+                    <!-- Tools Ekstrak/Download Ikon PWA (Hanya aktif jika upload lokal) -->
+                    <div id="downloadToolsWrapper" class="pt-4 border-t border-gray-800 hidden">
+                        <p class="text-xs text-gray-400 mb-2">Download Aset Ikon PWA (Hasil Resize & Kompres WebP):</p>
+                        <div class="flex gap-2">
+                            <button type="button" id="btnDl192" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-darker hover:bg-gray-700 border border-gray-700 text-white rounded-lg text-xs font-medium transition-colors">
+                                <i class="ph ph-download-simple"></i> 192x192
+                            </button>
+                            <button type="button" id="btnDl512" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-darker hover:bg-gray-700 border border-gray-700 text-white rounded-lg text-xs font-medium transition-colors">
+                                <i class="ph ph-download-simple"></i> 512x512
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Output Code -->
+        <div class="lg:col-span-7 flex flex-col h-full space-y-4">
+            <div class="glass-panel p-4 rounded-2xl shadow-xl flex-grow flex flex-col">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <h2 class="text-base sm:text-lg font-semibold text-white flex items-center gap-2 flex-wrap">
+                        <i class="ph ph-code"></i> Hasil XML <span id="xmlSizeInfo" class="text-xs font-normal text-gray-400 ml-2"></span>
+                    </h2>
+                    <div class="flex gap-2">
+                        <button id="btnCopy" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-accent hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors">
+                            <i class="ph ph-copy"></i> Salin
+                        </button>
+                        <button id="btnDownload" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-opacity-80 text-white rounded-lg text-sm font-medium transition-colors">
+                            <i class="ph ph-download-simple"></i> Download
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative flex-grow h-[280px] sm:h-[380px] lg:h-[500px]">
+                    <textarea id="xmlOutput" class="absolute inset-0 w-full h-full bg-dark border border-gray-800 rounded-xl p-4 text-sm font-mono text-green-400 focus:outline-none resize-none" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm transform translate-y-20 opacity-0 transition-all duration-300 glass-panel px-4 sm:px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 z-50">
+        <i class="ph ph-check-circle text-2xl text-green-400"></i>
+        <span class="text-white font-medium" id="toastMessage">Berhasil disalin!</span>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // DOM Elements
+        const form = document.getElementById('configForm');
+        const inputs = form.querySelectorAll('input');
+        const xmlOutput = document.getElementById('xmlOutput');
+        const xmlSizeInfo = document.getElementById('xmlSizeInfo');
+        const btnCopy = document.getElementById('btnCopy');
+        const btnDownload = document.getElementById('btnDownload');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        
+        // Preview Elements
+        const themeColorInput = document.getElementById('themeColor');
+        const bgColorInput = document.getElementById('bgColor');
+        const themeColorHex = document.getElementById('themeColorHex');
+        const bgColorHex = document.getElementById('bgColorHex');
+        const iconPreviewContainer = document.getElementById('iconPreviewContainer');
+        const iconPreviewText = document.getElementById('iconPreviewText');
+
+        const iconRadios = document.querySelectorAll('input[name="iconType"]');
+        const urlIconWrapper = document.getElementById('urlIconWrapper');
+        const textIconWrapper = document.getElementById('textIconWrapper');
+        const imageIconWrapper = document.getElementById('imageIconWrapper');
+        
+        const iconUrlInput = document.getElementById('iconUrl');
+        const iconImageInput = document.getElementById('iconImage');
+        const iconPreviewImg = document.getElementById('iconPreviewImg');
+        
+        const downloadToolsWrapper = document.getElementById('downloadToolsWrapper');
+        const btnDl192 = document.getElementById('btnDl192');
+        const btnDl512 = document.getElementById('btnDl512');
+
+        // State untuk menyimpan Base64 gambar kustom
+        let customIcon192Src = null;
+        let customIcon512Src = null;
+        
+        // State ikon yang aktif
+        let currentActiveIcon192 = '';
+        let currentActiveIcon512 = '';
+        let currentActiveIconExt = 'svg';
+
+        // Toggle UI Sumber Ikon
+        iconRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                urlIconWrapper.classList.add('hidden');
+                textIconWrapper.classList.add('hidden');
+                imageIconWrapper.classList.add('hidden');
+                downloadToolsWrapper.classList.add('hidden');
+
+                if (e.target.value === 'url') {
+                    urlIconWrapper.classList.remove('hidden');
+                } else if (e.target.value === 'text') {
+                    textIconWrapper.classList.remove('hidden');
+                } else {
+                    imageIconWrapper.classList.remove('hidden');
+                    downloadToolsWrapper.classList.remove('hidden');
+                }
+                generateTemplate();
+            });
+        });
+
+        // Handle Upload Gambar & Kompresi WebP via Canvas
+        iconImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    // Kunci Kompresi: Gunakan 'image/webp' dengan kualitas 0.8 (80%)
+                    // Ini akan menurunkan ukuran file dari ratusan KB menjadi hanya kilobyte kecil.
+                    
+                    // Resize ke 192x192
+                    const canvas192 = document.createElement('canvas');
+                    canvas192.width = 192; canvas192.height = 192;
+                    const ctx192 = canvas192.getContext('2d');
+                    ctx192.drawImage(img, 0, 0, 192, 192);
+                    customIcon192Src = canvas192.toDataURL('image/webp', 0.8);
+
+                    // Resize ke 512x512
+                    const canvas512 = document.createElement('canvas');
+                    canvas512.width = 512; canvas512.height = 512;
+                    const ctx512 = canvas512.getContext('2d');
+                    ctx512.drawImage(img, 0, 0, 512, 512);
+                    customIcon512Src = canvas512.toDataURL('image/webp', 0.8);
+
+                    generateTemplate(); // Auto-update XML
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Event listener khusus untuk input URL agar preview berubah instan
+        iconUrlInput.addEventListener('input', function() {
+            if(document.querySelector('input[name="iconType"]:checked').value === 'url') {
+                iconPreviewImg.src = this.value;
+                generateTemplate();
+            }
+        });
+
+        // Helper: Convert string to Base64 (supporting Unicode safely)
+        function base64Encode(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        // Generate SVG String
+        function createSVG(size, bgColor, textColor, text) {
+            const fontSize = size === 192 ? 90 : 240;
+            const yPos = size === 192 ? 120 : 320;
+            const center = size / 2;
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}"><rect width="${size}" height="${size}" fill="${bgColor}"/><text x="${center}" y="${yPos}" font-size="${fontSize}" fill="${textColor}" text-anchor="middle" font-family="sans-serif" font-weight="bold">${text}</text></svg>`;
+        }
+
+        // Hitung estimasi ukuran string XML (Bytes to KB)
+        function calculateSize(str) {
+            const sizeInBytes = new Blob([str]).size;
+            const sizeInKb = (sizeInBytes / 1024).toFixed(1);
+            return sizeInKb;
+        }
+
+        // Main Generator Function
+        function generateTemplate() {
+            // Get Values
+            const url = document.getElementById('appUrl').value || '#';
+            const name = document.getElementById('appName').value || 'Aplikasi';
+            const shortName = document.getElementById('shortName').value || 'App';
+            const desc = document.getElementById('appDesc').value || '';
+            const theme = themeColorInput.value;
+            const bg = bgColorInput.value;
+            const iconText = document.getElementById('iconText').value || name.charAt(0);
+            const iconType = document.querySelector('input[name="iconType"]:checked').value;
+
+            // Update Color Previews
+            themeColorHex.textContent = theme.toUpperCase();
+            bgColorHex.textContent = bg.toUpperCase();
+            iconPreviewContainer.style.backgroundColor = bg;
+
+            // Variabel Icon
+            let icon192FinalSrc = '';
+            let icon512FinalSrc = '';
+            let iconMimeType = 'image/png';
+
+            if (iconType === 'url') {
+                // Gunakan URL Eksternal (Sangat Ringan)
+                const fallbackIcon = `data:image/svg+xml;base64,${base64Encode(createSVG(512, bg, theme, iconText || '?'))}`;
+                const extUrl = iconUrlInput.value || fallbackIcon;
+                icon192FinalSrc = extUrl;
+                icon512FinalSrc = extUrl;
+                iconMimeType = iconUrlInput.value ? 'image/png' : 'image/svg+xml'; // generic fallback
+
+                // Update Preview UI
+                iconPreviewText.classList.add('hidden');
+                iconPreviewImg.classList.remove('hidden');
+                iconPreviewImg.src = extUrl;
+                
+            } else if (iconType === 'text') {
+                // Generate SVGs Teks
+                const svg192 = createSVG(192, bg, theme, iconText);
+                const svg512 = createSVG(512, bg, theme, iconText);
+                icon192FinalSrc = `data:image/svg+xml;base64,${base64Encode(svg192)}`;
+                icon512FinalSrc = `data:image/svg+xml;base64,${base64Encode(svg512)}`;
+                iconMimeType = 'image/svg+xml';
+
+                // Update Preview UI
+                iconPreviewImg.classList.add('hidden');
+                iconPreviewText.classList.remove('hidden');
+                iconPreviewText.style.color = theme;
+                iconPreviewText.textContent = iconText;
+                
+            } else {
+                // Gunakan Logo Uploaded LOKAL (Sudah di kompresi ke WebP)
+                if (customIcon192Src && customIcon512Src) {
+                    icon192FinalSrc = customIcon192Src;
+                    icon512FinalSrc = customIcon512Src;
+                    iconMimeType = 'image/webp';
+                    
+                    // Update Preview UI
+                    iconPreviewText.classList.add('hidden');
+                    iconPreviewImg.classList.remove('hidden');
+                    iconPreviewImg.src = customIcon192Src;
+                } else {
+                    // Fallback jika belum upload
+                    const svg192 = createSVG(192, bg, theme, "?");
+                    const svg512 = createSVG(512, bg, theme, "?");
+                    icon192FinalSrc = `data:image/svg+xml;base64,${base64Encode(svg192)}`;
+                    icon512FinalSrc = `data:image/svg+xml;base64,${base64Encode(svg512)}`;
+                    iconMimeType = 'image/svg+xml';
+                    
+                    iconPreviewImg.classList.add('hidden');
+                    iconPreviewText.classList.remove('hidden');
+                    iconPreviewText.style.color = theme;
+                    iconPreviewText.textContent = "?";
+                }
+            }
+
+            currentActiveIcon192 = icon192FinalSrc;
+            currentActiveIcon512 = icon512FinalSrc;
+            currentActiveIconExt = iconMimeType === 'image/svg+xml' ? 'svg' : (iconMimeType === 'image/webp' ? 'webp' : 'png');
+
+            // Generate Manifest JSON & Encode
+            const manifestObj = {
+                "name": name,
+                "short_name": shortName,
+                "description": desc,
+                "start_url": "/",
+                "display": "standalone",
+                "background_color": bg,
+                "theme_color": theme,
+                "orientation": "portrait-primary",
+                "icons": [
+                    {
+                        "src": icon192FinalSrc,
+                        "sizes": "192x192",
+                        "type": iconMimeType,
+                        "purpose": "any maskable"
+                    },
+                    {
+                        "src": icon512FinalSrc,
+                        "sizes": "512x512",
+                        "type": iconMimeType,
+                        "purpose": "any maskable"
+                    }
+                ]
+            };
+            const b64_manifest = base64Encode(JSON.stringify(manifestObj));
+
+            // Generate XML Output
+            const xmlTemplate = `<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:defaultwidgetversion='2' b:layoutsversion='3' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/namespaces/gae/2008' xmlns:data='http://www.google.com/namespaces/atom' xmlns:expr='http://www.google.com/namespaces/all/0.8'>
+<head>
+    <title><data:blog.pageTitle/></title>
+    <meta content='width=device-width,initial-scale=1,viewport-fit=cover' name='viewport'/>
+
+    <!-- PWA Manifest -->
+    <link href='data:application/manifest+json;base64,${b64_manifest}' rel='manifest'/>
+
+    <!-- Meta tag PWA tambahan -->
+    <meta content='${theme}' name='theme-color'/>
+    <meta content='yes' name='mobile-web-app-capable'/>
+    <meta content='yes' name='apple-mobile-web-app-capable'/>
+    <meta content='black-translucent' name='apple-mobile-web-app-status-bar-style'/>
+    <meta content='${shortName}' name='apple-mobile-web-app-title'/>
+    <link href='${icon192FinalSrc}' rel='apple-touch-icon'/>
+
+    <b:skin><![CDATA[
+        /* Reset tampilan agar fullscreen */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            background-color: #ffffff;
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    ]]></b:skin>
+</head>
+<body>
+    <iframe 
+        allow='camera; microphone; display-capture; autoplay' 
+        src='${url}' />
+    <b:section id='main' showaddelement='no'>
+        <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' visible='false'/>
+    </b:section>
+</body>
+</html>`;
+
+            xmlOutput.value = xmlTemplate;
+            
+            // Hitung dan tampilkan indikator ukuran XML
+            const kbSize = calculateSize(xmlTemplate);
+            let sizeColor = 'text-green-400';
+            let sizeWarn = '';
+            
+            if (kbSize > 100) {
+                sizeColor = 'text-red-400';
+                sizeWarn = ' (⚠️ Ukuran cukup besar, berpotensi lag di HP. Gunakan opsi URL Gambar)';
+            } else if (kbSize > 30) {
+                sizeColor = 'text-yellow-400';
+            }
+
+            xmlSizeInfo.innerHTML = `(<span class="${sizeColor}">${kbSize} KB</span>)${sizeWarn}`;
+        }
+
+        // Add Event Listeners for real-time update
+        inputs.forEach(input => {
+            if (input.type !== 'file') {
+                input.addEventListener('input', generateTemplate);
+            }
+        });
+
+        // Show Toast Notification function
+        function showToast(msg) {
+            toastMessage.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Copy to Clipboard Action
+        btnCopy.addEventListener('click', () => {
+            const content = xmlOutput.value;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(content).then(() => {
+                    showToast('Kode XML disalin ke clipboard!');
+                }).catch(err => copyFallback(content));
+            } else {
+                copyFallback(content);
+            }
+        });
+
+        // Fallback for copying
+        function copyFallback(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Kode XML disalin ke clipboard!');
+            } catch (err) {
+                showToast('Gagal menyalin otomatis, silakan copy manual.');
+            }
+            textArea.remove();
+        }
+
+        // Download Action
+        btnDownload.addEventListener('click', () => {
+            const content = xmlOutput.value;
+            const shortName = document.getElementById('shortName').value || 'App';
+            const fileName = `theme-${shortName.toLowerCase().replace(/[^a-z0-9]/g, '-')}.xml`;
+            
+            const blob = new Blob([content], { type: 'text/xml' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast(`File ${fileName} didownload!`);
+            }, 0);
+        });
+
+        // Handler Ekstrak / Download Ikon PWA Individual
+        function downloadPwaIcon(src, size) {
+            if (!src || src.startsWith('http')) {
+                showToast('Hanya berfungsi untuk gambar lokal/Base64.');
+                return;
+            }
+            const shortName = document.getElementById('shortName').value || 'App';
+            const fileName = `icon-${shortName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${size}x${size}.${currentActiveIconExt}`;
+            
+            const a = document.createElement('a');
+            a.href = src;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast(`Ikon ukuran ${size}x${size} berhasil didownload!`);
+        }
+
+        btnDl192.addEventListener('click', (e) => {
+            e.preventDefault();
+            downloadPwaIcon(currentActiveIcon192, 192);
+        });
+
+        btnDl512.addEventListener('click', (e) => {
+            e.preventDefault();
+            downloadPwaIcon(currentActiveIcon512, 512);
+        });
+
+        // Initial Generation
+        generateTemplate();
+
+        // PWA: Register Service Worker (untuk tools generator ini sendiri)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => {
+                    console.warn('Service worker registration gagal:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
