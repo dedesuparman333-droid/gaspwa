@@ -1,0 +1,7 @@
+{
+  "name": "PWA XML Generator",
+  "description": "Generator template XML Blogger berisi iframe + manifest PWA untuk web app Google Apps Script (GAS).",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

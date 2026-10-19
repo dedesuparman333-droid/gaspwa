@@ -1,14 +1,14 @@
 // Service Worker - PWA XML Generator (Rahaza Digital)
 // Cache-first untuk file shell aplikasi, supaya tools tetap bisa dibuka offline.
 
-const CACHE_NAME = 'pwa-xml-generator-v1';
+const CACHE_NAME = 'pwa-xml-generator-v2';
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icons/icon.svg',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon.svg',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -32,8 +32,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Hanya tangani request GET dari origin sendiri.
-  // CDN eksternal (Tailwind, Phosphor Icons) dibiarkan lewat network biasa.
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
@@ -54,9 +52,8 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Fallback offline ke index.html untuk navigasi dokumen
           if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
+            return caches.match('/');
           }
         });
     })
